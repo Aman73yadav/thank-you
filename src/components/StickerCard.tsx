@@ -13,7 +13,7 @@ const StickerCard = ({ variant, shape, label }: StickerCardProps) => {
 
   return (
     <div className="flex flex-col items-center">
-      <ThankYouSticker ref={stickerRef} variant={variant} shape={shape} />
+      <ThankYouSticker stickerRef={stickerRef} variant={variant} shape={shape} />
       <span className="mt-4 text-sm font-medium text-muted-foreground uppercase tracking-wider">
         {label}
       </span>

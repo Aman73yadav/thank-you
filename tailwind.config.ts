@@ -47,6 +47,12 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        sticker: {
+          cream: "hsl(var(--sticker-cream))",
+          border: "hsl(var(--sticker-border))",
+          accent: "hsl(var(--sticker-accent))",
+          warm: "hsl(var(--sticker-warm))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -62,6 +68,15 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        script: ['"Dancing Script"', 'cursive'],
+      },
+      boxShadow: {
+        sticker: "0 4px 20px -2px hsl(25 40% 75% / 0.3)",
+        "sticker-elevated": "0 8px 30px -4px hsl(25 60% 45% / 0.4)",
+        "sticker-soft": "0 2px 15px -3px hsl(30 25% 70% / 0.25)",
+        "sticker-hover": "0 12px 40px -6px hsl(25 40% 75% / 0.5)",
       },
       keyframes: {
         "accordion-down": {
@@ -80,10 +95,15 @@ export default {
             height: "0",
           },
         },
+        "pulse-slow": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.7" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-slow": "pulse-slow 2s ease-in-out infinite",
       },
     },
   },

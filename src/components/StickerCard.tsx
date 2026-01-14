@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { forwardRef, useImperativeHandle, useRef } from "react";
 import ThankYouSticker, { StickerShape, StickerVariant, StickerCustomization } from "./ThankYouSticker";
 import DownloadButton from "./DownloadButton";
 
@@ -9,8 +9,16 @@ interface StickerCardProps {
   customization: StickerCustomization;
 }
 
-const StickerCard = ({ variant, shape, label, customization }: StickerCardProps) => {
+export interface StickerCardRef {
+  getStickerRef: () => HTMLDivElement | null;
+}
+
+const StickerCard = forwardRef<StickerCardRef, StickerCardProps>(({ variant, shape, label, customization }, ref) => {
   const stickerRef = useRef<HTMLDivElement>(null);
+
+  useImperativeHandle(ref, () => ({
+    getStickerRef: () => stickerRef.current,
+  }));
 
   return (
     <div className="flex flex-col items-center">
@@ -29,6 +37,8 @@ const StickerCard = ({ variant, shape, label, customization }: StickerCardProps)
       />
     </div>
   );
-};
+});
+
+StickerCard.displayName = "StickerCard";
 
 export default StickerCard;

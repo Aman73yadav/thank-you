@@ -3,6 +3,7 @@ import { Heart, Star, Sparkles } from "lucide-react";
 
 export type StickerShape = "rounded" | "circular" | "square" | "diecut" | "ticket" | "badge";
 export type StickerVariant = "classic" | "modern" | "elegant";
+export type StickerSize = "small" | "medium" | "large";
 
 export interface StickerCustomization {
   line1: string;
@@ -15,6 +16,7 @@ export interface StickerCustomization {
   bgColor: string;
   fontStyle: "script" | "modern" | "classic";
   logo: string | null;
+  size: StickerSize;
 }
 
 interface ThankYouStickerProps {
@@ -35,6 +37,14 @@ export const defaultCustomization: StickerCustomization = {
   bgColor: "#FDF8F3",
   fontStyle: "script",
   logo: null,
+  size: "medium",
+};
+
+// Size configurations for different print dimensions
+const sizeConfigs: Record<StickerSize, { scale: string; dimensions: string }> = {
+  small: { scale: "scale-75", dimensions: "2\" × 2.2\"" },
+  medium: { scale: "scale-100", dimensions: "3\" × 3.3\"" },
+  large: { scale: "scale-125", dimensions: "4\" × 4.4\"" },
 };
 
 const ThankYouSticker = ({ 
@@ -48,6 +58,8 @@ const ThankYouSticker = ({
     modern: "font-sans font-bold",
     classic: "font-serif",
   };
+
+  const sizeClass = sizeConfigs[customization.size].scale;
 
   const shapeStyles: Record<StickerShape, string> = {
     rounded: "w-72 h-80 rounded-2xl",
@@ -72,11 +84,12 @@ const ThankYouSticker = ({
   const subtleColor = variant === "modern" ? "rgba(255,255,255,0.8)" : customization.accentColor;
 
   return (
-    <div
-      ref={stickerRef}
-      style={containerStyle}
-      className={`relative p-6 flex flex-col items-center justify-center text-center transition-all duration-300 hover:scale-105 border-2 shadow-sticker hover:shadow-sticker-hover ${shapeClass}`}
-    >
+    <div className={`${sizeClass} origin-center transition-transform`}>
+      <div
+        ref={stickerRef}
+        style={containerStyle}
+        className={`relative p-6 flex flex-col items-center justify-center text-center transition-all duration-300 hover:scale-105 border-2 shadow-sticker hover:shadow-sticker-hover ${shapeClass}`}
+      >
       {/* Decorative elements based on shape */}
       {shape === "rounded" && (
         <>
@@ -160,9 +173,11 @@ const ThankYouSticker = ({
         style={{ color: subtleColor }}
       >
         {customization.line5}
-      </p>
+        </p>
+      </div>
     </div>
   );
 };
 
+export { sizeConfigs };
 export default ThankYouSticker;

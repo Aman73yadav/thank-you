@@ -2,8 +2,8 @@ import { useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { StickerCustomization } from "./ThankYouSticker";
-import { Palette, Type, MessageSquare, Upload, X } from "lucide-react";
+import { StickerCustomization, StickerSize, sizeConfigs } from "./ThankYouSticker";
+import { Palette, Type, MessageSquare, Upload, X, Maximize2 } from "lucide-react";
 
 interface CustomizationPanelProps {
   customization: StickerCustomization;
@@ -15,6 +15,12 @@ const fontOptions = [
   { value: "modern", label: "Modern (Bold)" },
   { value: "classic", label: "Classic (Serif)" },
 ] as const;
+
+const sizeOptions: { value: StickerSize; label: string }[] = [
+  { value: "small", label: "Small" },
+  { value: "medium", label: "Medium" },
+  { value: "large", label: "Large" },
+];
 
 const presetColors = [
   { name: "Warm Brown", primary: "#8B5A2B", accent: "#D4A574", bg: "#FDF8F3" },
@@ -176,6 +182,30 @@ const CustomizationPanel = ({ customization, onChange }: CustomizationPanelProps
               placeholder="♡"
             />
           </div>
+        </div>
+      </div>
+
+      {/* Size Options */}
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <Maximize2 className="w-4 h-4 text-muted-foreground" />
+          <span className="text-sm font-medium text-foreground">Sticker Size</span>
+        </div>
+        <div className="flex gap-2">
+          {sizeOptions.map((size) => (
+            <button
+              key={size.value}
+              onClick={() => updateField("size", size.value)}
+              className={`flex-1 py-2 px-3 rounded-lg border transition-all ${
+                customization.size === size.value
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-background text-foreground border-border hover:border-primary/50"
+              }`}
+            >
+              <div className="text-xs font-medium">{size.label}</div>
+              <div className="text-[10px] opacity-70">{sizeConfigs[size.value].dimensions}</div>
+            </button>
+          ))}
         </div>
       </div>
 

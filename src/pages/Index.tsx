@@ -1,6 +1,7 @@
-import { useState } from "react";
-import StickerCard from "@/components/StickerCard";
+import { useState, useRef, createRef } from "react";
+import StickerCard, { StickerCardRef } from "@/components/StickerCard";
 import CustomizationPanel from "@/components/CustomizationPanel";
+import BulkDownloadButton from "@/components/BulkDownloadButton";
 import { StickerShape, StickerVariant, StickerCustomization, defaultCustomization } from "@/components/ThankYouSticker";
 
 const stickerConfigs: { shape: StickerShape; variant: StickerVariant; label: string }[] = [
@@ -14,6 +15,16 @@ const stickerConfigs: { shape: StickerShape; variant: StickerVariant; label: str
 
 const Index = () => {
   const [customization, setCustomization] = useState<StickerCustomization>(defaultCustomization);
+  const stickerCardRefs = useRef<React.RefObject<StickerCardRef>[]>(
+    stickerConfigs.map(() => createRef<StickerCardRef>())
+  );
+
+  const getStickerRefs = () => {
+    return stickerConfigs.map((config, index) => ({
+      ref: { current: stickerCardRefs.current[index].current?.getStickerRef() || null } as React.RefObject<HTMLDivElement>,
+      label: config.label,
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-background py-12 px-4">
@@ -41,10 +52,16 @@ const Index = () => {
 
           {/* Sticker Grid */}
           <div className="flex-1">
+            {/* Bulk Download Button */}
+            <div className="flex justify-center mb-8">
+              <BulkDownloadButton stickerRefs={getStickerRefs()} />
+            </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 justify-items-center">
-              {stickerConfigs.map((config) => (
+              {stickerConfigs.map((config, index) => (
                 <StickerCard
                   key={`${config.shape}-${config.variant}`}
+                  ref={stickerCardRefs.current[index]}
                   variant={config.variant}
                   shape={config.shape}
                   label={config.label}
@@ -62,7 +79,7 @@ const Index = () => {
           </h2>
           <div 
             className="rounded-xl p-8 max-w-md mx-auto border-2 shadow-sticker-soft"
-            style={{ 
+            style={{
               backgroundColor: customization.bgColor,
               borderColor: customization.accentColor 
             }}

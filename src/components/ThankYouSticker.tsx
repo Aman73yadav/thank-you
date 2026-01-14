@@ -59,7 +59,7 @@ const ThankYouSticker = ({
     classic: "font-serif",
   };
 
-  const sizeClass = sizeConfigs[customization.size].scale;
+  const sizeClass = sizeConfigs[customization.size || "medium"].scale;
 
   const shapeStyles: Record<StickerShape, string> = {
     rounded: "w-72 h-80 rounded-2xl",

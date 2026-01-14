@@ -1,7 +1,9 @@
+import { useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { StickerCustomization } from "./ThankYouSticker";
-import { Palette, Type, MessageSquare } from "lucide-react";
+import { Palette, Type, MessageSquare, Upload, X } from "lucide-react";
 
 interface CustomizationPanelProps {
   customization: StickerCustomization;
@@ -24,6 +26,8 @@ const presetColors = [
 ];
 
 const CustomizationPanel = ({ customization, onChange }: CustomizationPanelProps) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const updateField = <K extends keyof StickerCustomization>(
     field: K,
     value: StickerCustomization[K]
@@ -40,12 +44,75 @@ const CustomizationPanel = ({ customization, onChange }: CustomizationPanelProps
     });
   };
 
+  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        updateField("logo", reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeLogo = () => {
+    updateField("logo", null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   return (
     <div className="bg-card rounded-xl border border-border p-6 w-full max-w-md shadow-sticker-soft">
       <h3 className="text-lg font-semibold text-foreground mb-6 flex items-center gap-2">
         <Palette className="w-5 h-5 text-primary" />
         Customize Your Sticker
       </h3>
+
+      {/* Logo Upload */}
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <Upload className="w-4 h-4 text-muted-foreground" />
+          <span className="text-sm font-medium text-foreground">Brand Logo</span>
+        </div>
+        
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleLogoUpload}
+          className="hidden"
+          id="logo-upload"
+        />
+        
+        {customization.logo ? (
+          <div className="flex items-center gap-3 p-3 bg-muted rounded-lg">
+            <img 
+              src={customization.logo} 
+              alt="Uploaded logo" 
+              className="w-12 h-12 object-contain rounded"
+            />
+            <span className="text-sm text-foreground flex-1">Logo uploaded</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={removeLogo}
+              className="text-destructive hover:text-destructive"
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
+        ) : (
+          <Button
+            variant="outline"
+            onClick={() => fileInputRef.current?.click()}
+            className="w-full"
+          >
+            <Upload className="w-4 h-4 mr-2" />
+            Upload Logo
+          </Button>
+        )}
+      </div>
 
       {/* Text Lines */}
       <div className="space-y-4 mb-6">

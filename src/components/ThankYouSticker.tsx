@@ -14,6 +14,7 @@ export interface StickerCustomization {
   accentColor: string;
   bgColor: string;
   fontStyle: "script" | "modern" | "classic";
+  logo: string | null;
 }
 
 interface ThankYouStickerProps {
@@ -33,6 +34,7 @@ export const defaultCustomization: StickerCustomization = {
   accentColor: "#D4A574",
   bgColor: "#FDF8F3",
   fontStyle: "script",
+  logo: null,
 };
 
 const ThankYouSticker = ({ 
@@ -103,11 +105,19 @@ const ThankYouSticker = ({
         </>
       )}
 
-      {/* Icon */}
-      <IconComponent 
-        className="w-8 h-8 mb-2 fill-current animate-pulse-slow" 
-        style={{ color: subtleColor }}
-      />
+      {/* Logo or Icon */}
+      {customization.logo ? (
+        <img 
+          src={customization.logo} 
+          alt="Brand logo" 
+          className="w-16 h-16 mb-2 object-contain"
+        />
+      ) : (
+        <IconComponent 
+          className="w-8 h-8 mb-2 fill-current animate-pulse-slow" 
+          style={{ color: subtleColor }}
+        />
+      )}
 
       {/* Line 1 - Main Thank You */}
       <h1 
